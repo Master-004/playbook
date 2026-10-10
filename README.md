@@ -286,15 +286,65 @@ Every check runs automatically, so quality doesn't depend on anyone remembering.
 
 ## 8. Testing Frameworks
 
-**Tests prove every change is on purpose.** Our goal is **80% code coverage**: CI reports it on every PR and only blocks a merge if coverage *drops*.
+**Tests prove every change is on purpose.** Our goal is **80% code coverage**. The shared CI workflow reports coverage and warns when it is below the goal; it does not currently block a merge based on coverage.
 
-| Test type | What it checks | Tools | When it runs |
+| Test type | What it checks | Tools | When it runs |Overview
+Imagine you have just hired a new developer. Before their first day, you want a playbook you can hand them that explains exactly what your team uses and how to get up and running -- a getting-started guide. 
+
+Your job is to create a tech employee playbook: something you could hand to a new team member that describes what your team is using and how to get started. Document the items discussed in class, listed below.
+
+Key rule: Be specific. Wherever possible, have things actually set up -- a real link to your Kanban board, a real link to download the IDE, real instructions for setting up a control -- rather than describing tools in the abstract.
+
+Note: Although this assignment seems big, use AI to make it manageable. That is what you will need to do in a real startup. This is a realistic time span to put this together. You instruct it, it creates, and you review/edit. 
+
+What to Include
+Your playbook should document all nine of the following areas:
+
+1. Language Selection
+Which programming language(s) your team uses, and why.
+
+2. IDE Selection and Setup
+Which IDE your team uses, a link to download it, and setup steps.
+
+3. Development Strategy
+Your team's process (e.g., Scrum, Kanban) and how it runs day to day.
+
+4. Git Strategy and Controls
+Branching strategy, commit conventions, and review/approval controls.
+
+5. Issue Tracking
+The tool you use to track work, plus a link to your live board.
+
+6. AI Agents and Controls
+Which AI tools are approved for use, and the guardrails around them.
+
+7. Code Quality
+Linting, formatting, and vulnerability scanning tools and configs.
+
+8. Testing Frameworks
+What you use to test code, and how testing fits your workflow.
+
+9. Other Controls, Tools, and Procedures
+Anything else a new hire would need -- deployment steps, secrets handling, on-call, etc.
+
+Format and Submission
+Your playbook must be accessible -- for example, a webpage (an AI tool can build this for you!), a shared doc, or a wiki page. It should be easy for a new hire to open and navigate, not a wall of unformatted text.
+
+Tip: Write it like you would hand it to a real new hire on day one. If a specific link, command, or setup step would help them get started faster, include it.
+
+Watch out: Generic answers cost points. "We use good coding practices" will not score as well as "We use ESLint with the Airbnb config, enforced through a pre-commit hook."
+
+Submit a link to your published playbook in this assignment's submission box.
+
+Grading
+Points	What This Looks Like
+5 / 5	You have a playbook covering all nine items above. You are specific, and where possible, things are actually set up (e.g., a link to your Kanban board, a link to download the IDE, instructions for setting up a control). The playbook itself is in an accessible format (e.g., a webpage).
 | --- | --- | --- | --- |
 | **Unit** | One function returns the right output for an input | `go test` + [testify](https://github.com/stretchr/testify) | Every PR |
 | **Component** | One part of the app still works and hasn't disappeared (e.g. the sign-in handler) | `go test` + [httptest](https://pkg.go.dev/net/http/httptest) | Every PR |
-| **Integration** | Our code works with real services like the database | [Testcontainers for Go](https://golang.testcontainers.org) | Every PR |
-| **API** | Each endpoint returns the right responses | [Postman](https://www.postman.com) collections run with [Newman](https://github.com/postmanlabs/newman) in CI | Every PR |
-| **End-to-end** | A full user journey works: sign up → search restaurants → save a favorite | [Playwright](https://playwright.dev) in GitHub Actions | Weekly + before each prod release |
+| **Integration** | Our code works with real services like the database | [Testcontainers for Go](https://golang.testcontainers.org) | Run with `make test-int`; add to an app's CI as needed, not currently in the shared workflow |
+| **API** | Each endpoint returns the right responses | [Postman](https://www.postman.com) collections with [Newman](https://github.com/postmanlabs/newman) | Add to an app's CI when API collections are available; not currently in the shared workflow |
+| **End-to-end** | A full user journey works: sign up → search restaurants → save a favorite | [Playwright](https://playwright.dev) | Add to an app's CI when the app has a runnable user journey; not currently in the shared workflow |
 
 ### Commands
 
@@ -305,6 +355,8 @@ make cover       # open the coverage report in your browser
 ```
 
 Tests live next to the code they test (`search.go` → `search_test.go`). Integration tests use the build tag `//go:build integration`.
+
+The shared workflow currently runs unit and component Go tests on every PR. Integration, API and end-to-end tests need to be configured for each app; they are not currently run by the shared workflow.
 
 ### How we grow coverage
 
