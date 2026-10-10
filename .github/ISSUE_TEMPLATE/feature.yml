@@ -1,0 +1,26 @@
+name: Feature
+description: Something new the product should do
+title: "feat: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Who needs this and what problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Acceptance criteria ("done means...")
+      placeholder: |
+        - [ ] A user can search restaurants by zip code
+        - [ ] Results show a gluten-free rating
+    validations:
+      required: true
+  - type: dropdown
+    id: points
+    attributes:
+      label: Size (points)
+      options: ["1", "2", "3", "5", "8"]

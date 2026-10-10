@@ -1,0 +1,44 @@
+# GlutenScout lint config (golangci-lint v2). Docs: https://golangci-lint.run
+version: "2"
+
+linters:
+  default: standard        # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - gosec                # insecure code patterns
+    - depguard             # approved packages only (see allow list below)
+    - revive               # style
+    - misspell
+    - bodyclose            # unclosed HTTP response bodies
+    - errorlint            # correct error wrapping
+    - noctx                # HTTP requests without context
+    - sqlclosecheck
+  settings:
+    depguard:
+      rules:
+        approved-packages:
+          # APPROVED PACKAGES LIST. To add one, open an ADR (docs/adr) and
+          # add it here in the same PR. Anything not listed fails lint.
+          list-mode: strict
+          files: ["$all"]
+          allow:
+            - $gostd                                   # Go standard library
+            - github.com/Master-004                    # our own modules (platform, apps)
+            - github.com/stretchr/testify              # test assertions
+            - github.com/testcontainers/testcontainers-go # integration tests
+            - github.com/go-chi/chi/v5                 # HTTP router
+            - github.com/jackc/pgx/v5                  # PostgreSQL driver
+            - github.com/google/uuid                   # UUIDs
+            - github.com/aws/aws-sdk-go-v2             # AWS SDK
+            - github.com/aws/aws-lambda-go             # Lambda handlers
+          deny:
+            - pkg: github.com/pkg/errors
+              desc: "use the standard library errors package"
+  exclusions:
+    presets:
+      - comments
+      - std-error-handling
+
+formatters:
+  enable:
+    - gofmt
+    - goimports

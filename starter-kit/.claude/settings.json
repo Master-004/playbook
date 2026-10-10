@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./**/*.tfvars)",
+      "Read(./**/*.tfstate)",
+      "Read(~/.aws/**)",
+      "Read(~/.ssh/**)"
+    ],
+    "allow": [
+      "Bash(make check)",
+      "Bash(make test)",
+      "Bash(go test:*)",
+      "Bash(golangci-lint run:*)"
+    ]
+  }
+}

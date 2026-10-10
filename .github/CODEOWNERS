@@ -1,0 +1,4 @@
+# Code owners must approve every change (see README section 4, Control 2).
+# Only full-time employees (FTEs) are listed here.
+# When we move to a GitHub organization, replace with: * @glutenscout/fte
+* @Master-004

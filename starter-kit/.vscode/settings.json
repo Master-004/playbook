@@ -1,0 +1,21 @@
+{
+  "editor.formatOnSave": true,
+  "go.formatTool": "goimports",
+  "go.lintTool": "golangci-lint",
+  "go.lintOnSave": "package",
+  "go.lintFlags": ["--fast-only"],
+  "go.testFlags": ["-race", "-cover"],
+  "go.coverOnSave": false,
+  "gopls": {
+    "ui.semanticTokens": true,
+    "formatting.gofumpt": false
+  },
+  "[go]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "files.exclude": {
+    "**/.terraform": true
+  }
+}

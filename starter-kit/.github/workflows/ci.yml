@@ -1,0 +1,16 @@
+# Copy into every app repo. Runs the shared GlutenScout checks.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 13 * * 1" # weekly Monday run catches newly published vulnerabilities
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: Master-004/playbook/.github/workflows/go-ci.yml@main

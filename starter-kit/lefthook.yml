@@ -1,0 +1,31 @@
+# Git hooks for every GlutenScout repo. Install once with: lefthook install
+# Docs: https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.go"
+      run: goimports -w {staged_files}
+      stage_fixed: true
+    lint:
+      glob: "*.go"
+      run: golangci-lint run --new-from-rev=HEAD
+    secrets:
+      run: gitleaks protect --staged --no-banner --redact
+
+commit-msg:
+  commands:
+    conventional-commit:
+      run: |
+        msg=$(head -n1 {1})
+        if ! echo "$msg" | grep -qE '^(feat|fix|chore|docs|refactor|test|ci|perf|build|revert)(\([a-z0-9-]+\))?!?: .+'; then
+          echo "Commit message must follow Conventional Commits, e.g. 'feat: add restaurant search'"
+          exit 1
+        fi
+
+pre-push:
+  commands:
+    tests:
+      glob: "*.go"
+      run: go test ./...

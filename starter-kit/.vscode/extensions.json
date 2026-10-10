@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "golang.go",
+    "opentofu.vscode-opentofu",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "redhat.vscode-yaml",
+    "ms-azuretools.vscode-docker",
+    "anthropic.claude-code"
+  ]
+}

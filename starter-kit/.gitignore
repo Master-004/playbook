@@ -1,0 +1,26 @@
+# Secrets - never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets/
+credentials.json
+
+# OpenTofu / Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+
+# Go
+/bin/
+coverage.out
+*.test
+
+# Editors / OS
+.idea/
+.DS_Store
+.claude/settings.local.json

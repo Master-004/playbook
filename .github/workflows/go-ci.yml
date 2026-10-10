@@ -1,0 +1,68 @@
+# Shared CI for every GlutenScout Go repo.
+# App repos call this with: uses: Master-004/playbook/.github/workflows/go-ci.yml@main
+name: go-ci
+
+on:
+  workflow_call:
+    inputs:
+      go-version-file:
+        type: string
+        default: go.mod
+      coverage-target:
+        description: Coverage goal in percent (reported, not blocking)
+        type: number
+        default: 80
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ inputs.go-version-file }}
+
+      - name: Format check (gofmt)
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "These files need gofmt:"; echo "$unformatted"; exit 1
+          fi
+
+      - name: Lint (golangci-lint, includes gosec + depguard)
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+
+      - name: Vulnerability scan (govulncheck)
+        uses: golang/govulncheck-action@v1
+        with:
+          go-version-file: ${{ inputs.go-version-file }}
+
+      - name: Secret scan (gitleaks)
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest \
+            detect --source=/repo --no-banner --redact -v
+
+      - name: License check (go-licenses)
+        run: |
+          go install github.com/google/go-licenses@latest
+          go-licenses check ./... --disallowed_types=forbidden,restricted
+
+      - name: Unit + component tests with coverage
+        run: go test -race -coverprofile=coverage.out ./...
+
+      - name: Coverage report (goal ${{ inputs.coverage-target }}%)
+        run: |
+          total=$(go tool cover -func=coverage.out | awk '/^total:/ {sub("%","",$3); print $3}')
+          echo "### Coverage: ${total}% (goal ${{ inputs.coverage-target }}%)" >> "$GITHUB_STEP_SUMMARY"
+          awk -v t="$total" -v g="${{ inputs.coverage-target }}" 'BEGIN { if (t+0 < g+0) print "::warning::Coverage " t "% is below the " g "% goal" }'
+
+      - name: Build
+        run: go build ./...
